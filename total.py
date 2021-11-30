@@ -12,30 +12,30 @@ from PIL import Image
 
 
 if __name__ == '__main__':
-    wx0 = cv2.imread('DATA/0/wx_0.bmp')
-    wx1 = cv2.imread('DATA/0/wx_1.bmp')  # 此时 wx1是np.array
+    origin = cv2.imread('DATA/0/wx_0.bmp')
+    right = cv2.imread('DATA/0/wx_1.bmp')  # 读入后是np.array
 
-    wx0 = cv2.cvtColor(wx0, cv2.COLOR_BGR2GRAY)  # 化为灰度图
-    wx1 = cv2.cvtColor(wx1, cv2.COLOR_BGR2GRAY)
-    (mean0, stddv0) = cv2.meanStdDev(wx0)
-    (mean1, stddv1) = cv2.meanStdDev(wx1)
+    origin = cv2.cvtColor(origin, cv2.COLOR_BGR2GRAY)  # 化为灰度图
+    right = cv2.cvtColor(right, cv2.COLOR_BGR2GRAY)
+    (mean0, stddv0) = cv2.meanStdDev(origin)  # 计算均值和方差
+    (mean1, stddv1) = cv2.meanStdDev(right)
 
     # 右移0.5图和原图进行全插值
-    output = np.zeros((wx0.shape[0]*2, wx0.shape[1]*2))  # 初始化大图
-    for i in range(wx0.shape[0]):  # 遍历大图和小图所有像素
-        for j in range(wx0.shape[1]):
-            if j == (wx0.shape[1] - 1):  # 最后一列不要了，为构成2m×2n像素
+    output = np.zeros((origin.shape[0] * 2, origin.shape[1] * 2))  # 初始化大图
+    for i in range(origin.shape[0]):  # 遍历大图和小图所有像素
+        for j in range(origin.shape[1]):
+            if j == (origin.shape[1] - 1):  # 最后一列不要了，为构成2m×2n像素
                 continue
             else:
                 if j != 0:  # 防止数组索引小于0
                     """必须加int，否则会发生溢出"""
-                    output[2 * i][2 * j] = (int(wx0[i][j]) + int(wx1[i][j - 1])) / 2
-                    output[2 * i + 1][2 * j] = (int(wx0[i][j]) + int(wx1[i][j - 1])) / 2
-                output[2*i][2*j+1] = (int(wx0[i][j]) + int(wx1[i][j])) / 2
-                output[2*i+1][2*j+1] = (int(wx0[i][j]) + int(wx1[i][j])) / 2
-    for i in range(wx0.shape[0]):  # 单独考虑大图第一列
-        output[2*i][0] = wx0[i][0]  # 直接等于小图第一列
-        output[2*i+1][0] = wx0[i][0]
+                    output[2 * i][2 * j] = (int(origin[i][j]) + int(right[i][j - 1])) / 2
+                    output[2 * i + 1][2 * j] = (int(origin[i][j]) + int(right[i][j - 1])) / 2
+                output[2*i][2*j+1] = (int(origin[i][j]) + int(right[i][j])) / 2
+                output[2*i+1][2*j+1] = (int(origin[i][j]) + int(right[i][j])) / 2
+    for i in range(origin.shape[0]):  # 单独考虑大图第一列
+        output[2*i][0] = origin[i][0]  # 直接等于小图第一列
+        output[2*i+1][0] = origin[i][0]
     im = Image.fromarray(output)
     im.show()
     im = im.convert('L')
