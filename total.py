@@ -43,7 +43,7 @@ if __name__ == '__main__':
         o_r_out[2 * i + 1][0] = origin[i][0]
     im = Image.fromarray(o_r_out)
     im.show()
-    im = im.convert('L')
+    im = im.convert('L')  # 转换后才能保存
     im.save('o+r_t.png')
     # 读入输出的图片，化成灰度图计算方差和均值
     new = cv2.imread('o+r_t.png')
