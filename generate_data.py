@@ -8,20 +8,9 @@ from PIL import Image
 if __name__ == '__main__':
     # HR_path = 'DATA/0/wx_0.bmp'
     # LR_path = 'DATA'
-
 # 读入图片
     hr = cv2.imread('DATA/0/wx_0.bmp')
-    # right = cv2.imread('DATA/0/wx_1.bmp')  # 读入后是np.array
-    # left = cv2.imread('DATA/0/wx_3.bmp')
-    # down = cv2.imread('DATA/0/wx_2.bmp')
-
-    # down = cv2.cvtColor(down, cv2.COLOR_BGR2GRAY)
     hr = cv2.cvtColor(hr, cv2.COLOR_BGR2GRAY)  # 化为灰度图
-    # right = cv2.cvtColor(right, cv2.COLOR_BGR2GRAY)
-    # left = cv2.cvtColor(left, cv2.COLOR_BGR2GRAY)  # 化为灰度图
-    hr_shape = hr.shape
-
-
 # step1:将所有HR图片分辨率修改为2m*2n
     if hr.shape[0] % 2 == 0:
         if hr.shape[1] % 2 == 0:
@@ -41,14 +30,13 @@ if __name__ == '__main__':
             lr1[i, j] = (int(hr[2*i, 2*j]) + int(hr[2*i, 2*j+1]) + int(hr[2*i+1, 2*j]) + int(hr[2*i+1, 2*j+1])) / 4
     for i in range(lr2.shape[0]):
         for j in range(lr2.shape[1]):
-            lr2[i, j] = (int(hr[2*i+1,2*j+1])+int(hr[2*i+1,2*j+2])+int(hr[2*i+2,2*j+1])+int(hr[2*i+2,2*j+2])) / 4
+            lr2[i, j] = (int(hr[2*i+1, 2*j+1])+int(hr[2*i+1, 2*j+2])+int(hr[2*i+2, 2*j+1])+int(hr[2*i+2, 2*j+2])) / 4
 # step3:图片输出
     lr1_img = Image.fromarray(lr1)
     lr2_img = Image.fromarray(lr2)
     lr1_img = lr1_img.convert('L')  # 化为灰度图
     lr2_img = lr2_img.convert('L')
-    # lr1_img.save('DATA/LR_imgs/lr1.png')
-    # lr2_img.save('DATA/LR_imgs/lr2.png')
+    lr1_img.save('DATA/LR_imgs/lr1.png')
+    lr2_img.save('DATA/LR_imgs/lr2.png')
     lr1_img.show()
     lr2_img.show()
-

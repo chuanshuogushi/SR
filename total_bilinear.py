@@ -21,8 +21,8 @@ if __name__ == '__main__':
     # 双线性插值，计算得到2个中间图层
     for i in range(left.shape[0]-1):
         for j in range(left.shape[1]-1):
-            x[i][j] = (int(left[i+1,j]) + int(left[i+1,j+1]) + int(down[i,j]) + int(down[i+1,j]))/4
-            y[i][j] = (int(left[i,j+1]) + int(left[i+1,j+1]) + int(down[i,j]) + int(down[i,j+1]))/4
+            x[i][j] = (int(left[i+1, j]) + int(left[i+1, j+1]) + int(down[i, j]) + int(down[i+1, j]))/4
+            y[i][j] = (int(left[i, j+1]) + int(left[i+1, j+1]) + int(down[i, j]) + int(down[i, j+1]))/4
     # 显示中间图层
     # x_im = Image.fromarray(x)
     # y_im = Image.fromarray(y)
@@ -44,5 +44,3 @@ if __name__ == '__main__':
     im.show()
     im = im.convert('L')
     im.save('l+d_tb.png')
-
-
