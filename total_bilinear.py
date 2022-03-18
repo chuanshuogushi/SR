@@ -1,4 +1,5 @@
 """实现全插值+双线性插值结合"""
+#!/usr/bin/python
 import cv2
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg  # mpimg 用于读取图片
