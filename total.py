@@ -47,7 +47,7 @@ if __name__ == '__main__':
     im = im.convert('L')  # 转换后才能保存
     im.save('o+r_t.png')
     # 读入输出的图片，化成灰度图计算方差和均值
-    new = cv2.imread('o+r_t.png')
+    new = cv2.imread('result/o+r_t.png')
     new = cv2.cvtColor(new, cv2.COLOR_BGR2GRAY)
     (mean2, stddv2) = cv2.meanStdDev(new)
     print(mean0, stddv0)
