@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg  # mpimg 用于读取图片
 import numpy as np
 from PIL import Image
+from utils import total_inter
 # def total_interpolation(input, output, direction, distance):
 #     """input: ndarray格式
 #     output
@@ -45,7 +46,7 @@ if __name__ == '__main__':
     im = Image.fromarray(o_r_out)
     im.show()
     im = im.convert('L')  # 转换后才能保存
-    im.save('o+r_t.png')
+    im.save('result/o+r_t.png')
     # 读入输出的图片，化成灰度图计算方差和均值
     new = cv2.imread('result/o+r_t.png')
     new = cv2.cvtColor(new, cv2.COLOR_BGR2GRAY)
@@ -55,20 +56,11 @@ if __name__ == '__main__':
     print(mean2, stddv2)
 
     # 将left和down进行全插值
-    l_d_out = np.zeros((left.shape[0] * 2 - 1, left.shape[1] * 2 - 1))
-    for i in range(left.shape[0]):
-        for j in range(left.shape[1]):
-            l_d_out[2 * i][2 * j] = (int(left[i][j]) + int(down[i][j])) / 2
-            if j != left.shape[1] - 1:
-                l_d_out[2 * i][2 * j + 1] = (int(left[i][j + 1]) + int(down[i][j])) / 2
-            if i != left.shape[0] - 1:
-                l_d_out[2 * i + 1][2 * j] = (int(left[i + 1][j]) + int(down[i][j])) / 2
-            if j != left.shape[1] - 1 and i != left.shape[0] - 1:
-                l_d_out[2 * i + 1][2 * j + 1] = (int(left[i + 1][j + 1]) + int(down[i][j])) / 2
+    l_d_out = total_inter(left, down)
     im = Image.fromarray(l_d_out)
     im.show()
     im = im.convert('L')
-    im.save('l+d_t.png')
+    im.save('result/l+d_t.png')
     print('done!')
 
     # print(wx0.shape)  # (478,638)

@@ -8,7 +8,7 @@ from utils import reshape_img
 from utils import gen_lr
 if __name__ == '__main__':
     HR_path = 'result/l+d_t.png'
-    LR_path = 'DATA/LR_imgs/'
+    LR_path = 'result/LR_imgs/'
 
 # 读入图片
     hr = cv2.imread(HR_path)
