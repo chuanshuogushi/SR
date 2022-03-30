@@ -29,6 +29,8 @@ def gen_lr(hr):
     for i in range(lr2.shape[0]):
         for j in range(lr2.shape[1]):
             lr2[i, j] = (int(hr[2 * i + 1, 2 * j + 1]) + int(hr[2 * i + 1, 2 * j + 2]) + int(hr[2 * i + 2, 2 * j + 1]) + int(hr[2 * i + 2, 2 * j + 2])) / 4
+    lr1 = Image.fromarray(lr1)
+    lr2 = Image.fromarray(lr2)
     return lr1, lr2
 
 def total_inter(lr_l, lr_d):
