@@ -8,15 +8,15 @@ from PIL import Image
 from utils import total_bilinear_inter
 
 if __name__ == '__main__':
-    # 读入左移和下移的图片
-    left = cv2.imread('DATA/0/wx_3.bmp')
-    left = cv2.cvtColor(left, cv2.COLOR_BGR2GRAY)  # 化为灰度图
+    # 读入左上移和原图的图片
+    leftup = cv2.imread('DATA/0/wx_2.bmp')
+    leftup = cv2.cvtColor(leftup, cv2.COLOR_BGR2GRAY)  # 化为灰度图
 
-    down = cv2.imread('DATA/0/wx_2.bmp')
-    down = cv2.cvtColor(down, cv2.COLOR_BGR2GRAY)
+    origin = cv2.imread('DATA/0/wx_0.bmp')
+    origin = cv2.cvtColor(origin, cv2.COLOR_BGR2GRAY)
 
-    # 左移和下移进行全插值+双线性插值
-    im = total_bilinear_inter(left, down)
+    # 左上移和原图进行全插值+双线性插值
+    im = total_bilinear_inter(leftup, origin)
     im.show()
     im = im.convert('L')
-    im.save('result/l+d_tb.png')
+    im.save('result/o+lu_tb.png')

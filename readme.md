@@ -2,9 +2,11 @@
 
 **l**：left
 
-**d**：down
+**lu**：leftup
 
 **o**：original
+
+**u**: up
 
 **t**：total，全插值
 

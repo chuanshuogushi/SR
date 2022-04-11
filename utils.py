@@ -52,16 +52,16 @@ def total_inter(lr_l, lr_d):
                 hr[2 * i + 1][2 * j + 1] = (int(lr_l[i + 1][j + 1]) + int(lr_d[i][j])) / 2
     return hr
 
-def total_bilinear_inter(lr_l, lr_d):
-    '''全插值与双线性插值相结合，需相同形状，左移和下移插值'''
-    assert lr_l.shape == lr_d.shape  # 两图片形状需相同
-    x = np.zeros((lr_l.shape[0], lr_l.shape[1]))
-    y = np.zeros((lr_l.shape[0], lr_l.shape[1]))
+def total_bilinear_inter(lr_lu, lr_o):
+    '''全插值与双线性插值相结合，需相同形状，左上和原图插值'''
+    assert lr_lu.shape == lr_o.shape  # 两图片形状需相同
+    x = np.zeros((lr_lu.shape[0], lr_lu.shape[1]))
+    y = np.zeros((lr_lu.shape[0], lr_lu.shape[1]))
     # 双线性插值，计算得到2个中间图层
-    for i in range(lr_l.shape[0] - 1):
-        for j in range(lr_l.shape[1] - 1):
-            x[i][j] = (int(lr_l[i + 1, j]) + int(lr_l[i + 1, j + 1]) + int(lr_d[i, j]) + int(lr_d[i + 1, j])) / 4
-            y[i][j] = (int(lr_l[i, j + 1]) + int(lr_l[i + 1, j + 1]) + int(lr_d[i, j]) + int(lr_d[i, j + 1])) / 4
+    for i in range(lr_lu.shape[0] - 1):
+        for j in range(lr_lu.shape[1] - 1):
+            x[i][j] = (int(lr_lu[i + 1, j]) + int(lr_lu[i + 1, j + 1]) + int(lr_o[i, j]) + int(lr_o[i + 1, j])) / 4
+            y[i][j] = (int(lr_lu[i, j + 1]) + int(lr_lu[i + 1, j + 1]) + int(lr_o[i, j]) + int(lr_o[i, j + 1])) / 4
     # 显示中间图层
     # x_im = Image.fromarray(x)
     # y_im = Image.fromarray(y)
@@ -69,18 +69,18 @@ def total_bilinear_inter(lr_l, lr_d):
     # y_im.show()
 
     # 用中间图层计算最终图层
-    l_d_out = np.zeros((lr_l.shape[0] * 2 - 1, lr_l.shape[1] * 2 - 1))
-    for i in range(lr_l.shape[0] - 1):
-        for j in range(lr_l.shape[1] - 1):
+    l_d_out = np.zeros((lr_lu.shape[0] * 2 - 1, lr_lu.shape[1] * 2 - 1))
+    for i in range(lr_lu.shape[0] - 1):
+        for j in range(lr_lu.shape[1] - 1):
             if j != 0 and i != 0:
-                l_d_out[2 * i][2 * j] = (int(lr_l[i][j]) + int(lr_d[i][j]) + int(x[i - 1][j]) + int(y[i][j - 1])) / 4
+                l_d_out[2 * i][2 * j] = (int(lr_lu[i][j]) + int(lr_o[i][j]) + int(x[i - 1][j]) + int(y[i][j - 1])) / 4
             if j != 0:
-                l_d_out[2 * i + 1][2 * j] = (int(lr_l[i + 1][j]) + int(lr_d[i][j]) + int(x[i][j]) + int(
+                l_d_out[2 * i + 1][2 * j] = (int(lr_lu[i + 1][j]) + int(lr_o[i][j]) + int(x[i][j]) + int(
                     y[i][j - 1])) / 4
             if i != 0:
-                l_d_out[2 * i][2 * j + 1] = (int(lr_l[i][j + 1]) + int(lr_d[i][j]) + int(x[i - 1][j]) + int(
+                l_d_out[2 * i][2 * j + 1] = (int(lr_lu[i][j + 1]) + int(lr_o[i][j]) + int(x[i - 1][j]) + int(
                     y[i][j])) / 4
-            l_d_out[2 * i + 1][2 * j + 1] = (int(lr_l[i + 1][j + 1]) + int(lr_d[i][j]) + int(x[i][j]) + int(
+            l_d_out[2 * i + 1][2 * j + 1] = (int(lr_lu[i + 1][j + 1]) + int(lr_o[i][j]) + int(x[i][j]) + int(
                 y[i][j])) / 4
     im = Image.fromarray(l_d_out)
     return im
