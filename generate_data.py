@@ -10,8 +10,8 @@ from utils import reshape_img
 from utils import gen_lr
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--HR-path', type=str, required=True)
-    parser.add_argument('--LR-path', type=str, required=True)
+    parser.add_argument('--HR-path', default='./DATA/Set14/HR', type=str)
+    parser.add_argument('--LR-path', default='./DATA/Set14/sub_LR', type=str)
     args = parser.parse_args()
     # HR_path = 'DATA\Data_for_SRGAN\HR' # 高分辨率图片文件夹读入路径
     # LR_path = 'DATA\Data_for_SRGAN\sub_LR'  # 低分辨率图片文件夹存放路径

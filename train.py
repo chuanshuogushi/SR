@@ -9,17 +9,19 @@ import torch.optim as optim
 from torch import nn
 from torch.utils.data import Dataset
 from torch.utils.data.dataloader import DataLoader
-
-
+from dataset import MyDataset
+import torchvision
+from utils import AverageMeter
 from lrcnn_model import LRCNN
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--HR-path', type=str, required=True, default='DATA/Data_for_SRGAN/HR')
-    parser.add_argument('--LR-path', type=str, required=True, default='DATA/Data_for_SRGAN/sub_LR')
-    parser.add_argument('--output-dir', type=str, required=True, default='DATA/Data_for_SRGAN/sub_LR_out')
+    parser.add_argument('--HR-path', type=str, default='DATA/T91/sub_LR/1')
+    parser.add_argument('--LR-path', type=str, default='DATA/T91/sub_LR/2')
+    parser.add_argument('--output-dir', type=str, default='DATA/T91/out')
     parser.add_argument('--batch-size', type=int, default=16)
     parser.add_argument('--seed', type=int, default=18374288)
     parser.add_argument('--num-epoch', type=int, default=5)
+    parser.add_argument('--lr', default=0.1)
     args = parser.parse_args()
 
     if not os.path.exists(args.output_dir):
@@ -37,13 +39,39 @@ if __name__ == '__main__':
         {'params': model.conv3.parameters(), 'lr': args.lr*0.1}
     ], lr=args.lr)
 
-    train_set = Dataset(args.HR_path)   # TODO
-    train_loader = DataLoader(dataset=train_set,
-                              batch_size=args.batch_size)
-
-    # TODO eval相关未添加，best_weights等未初始化
+    transforms_imag = torchvision.transforms.ToTensor()
+    train_input_root = './DATA/T91/sub_LR/1'
+    train_label_root = './DATA/T91/sub_LR/2'
+    eval_input_root = './DATA/Set14/sub_LR/1'
+    eval_label_root = './DATA/Set14/sub_LR/2'
+    dataset_train=MyDataset(train_input_root, train_label_root, transform=transforms_imag)
+    trainloader=DataLoader(dataset_train)
 
     for epoch in range(args.num_epoch):
         model.train()
-        epoch_loss = 0 # TODO
+        epoch_losses = AverageMeter
+        for b_index, (data, label) in enumerate(trainloader):
+            x = data.to(device)
+            y = label.to(device)
+            preds = model(x)
+            loss = criterion(preds, y)
+            epoch_losses.update(loss.item(), len(x))
+            print(loss)
+
+            # epoch_loss=
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+        torch.save(model.state_dict(), os.path.join(args.output_dir, 'epoch_{}.pth'.format(epoch)))
+
+        model.eval()
+        epoch_psnr = AverageMeter()
+
+        # for data in ev
+
+
+
+
+
+
 
