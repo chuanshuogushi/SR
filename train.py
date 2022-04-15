@@ -11,7 +11,10 @@ from torch.utils.data import Dataset
 from torch.utils.data.dataloader import DataLoader
 from dataset import MyDataset
 import torchvision
-from utils import AverageMeter
+import numpy as np
+import cv2
+from PIL import Image
+# from utils import AverageMeter
 from lrcnn_model import LRCNN
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -21,7 +24,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch-size', type=int, default=16)
     parser.add_argument('--seed', type=int, default=18374288)
     parser.add_argument('--num-epoch', type=int, default=5)
-    parser.add_argument('--lr', default=0.1)
+    parser.add_argument('--lr', default=0.001)
     args = parser.parse_args()
 
     if not os.path.exists(args.output_dir):
@@ -45,27 +48,32 @@ if __name__ == '__main__':
     eval_input_root = './DATA/Set14/sub_LR/1'
     eval_label_root = './DATA/Set14/sub_LR/2'
     dataset_train=MyDataset(train_input_root, train_label_root, transform=transforms_imag)
-    trainloader=DataLoader(dataset_train)
+    trainloader=DataLoader(dataset_train, shuffle=False)
 
     for epoch in range(args.num_epoch):
         model.train()
-        epoch_losses = AverageMeter
+        print(epoch)
+        print('*'*8)
+        # epoch_losses = AverageMeter
         for b_index, (data, label) in enumerate(trainloader):
             x = data.to(device)
             y = label.to(device)
             preds = model(x)
+            # vis
+            temp = (255*preds).permute(0,2,3,1).detach().cpu().numpy().astype(np.uint8)[0]
+            cv2.imwrite('./1.jpg', temp)
             loss = criterion(preds, y)
-            epoch_losses.update(loss.item(), len(x))
-            print(loss)
+            # epoch_losses.update(loss.item(), len(x))
+            print(loss.item())
 
-            # epoch_loss=
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
         torch.save(model.state_dict(), os.path.join(args.output_dir, 'epoch_{}.pth'.format(epoch)))
 
         model.eval()
-        epoch_psnr = AverageMeter()
+
+        # epoch_psnr = AverageMeter()
 
         # for data in ev
 
